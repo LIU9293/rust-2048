@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{app_title}</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link rel="icon shortcut" type="image/png" href="static/favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <script src="/static/darktheme.js"></script> -->
+    {style_include}
+
+    <style>
+      html,
+      body {
+        background-color: #495057;
+        color: white;
+      }
+
+      #main {
+        min-height: 100vh;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+    <!-- Note the usage of `type=module` here as this is an ES6 module -->
+    <script type="module">
+      import init from "/{base_path}/assets/dioxus/{app_name}.js";
+      init("/{base_path}/assets/dioxus/{app_name}_bg.wasm").then((wasm) => {
+        if (wasm.__wbindgen_start == undefined) {
+          wasm.main();
+        }
+      });
+    </script>
+    {script_include}
+  </body>
+</html>
