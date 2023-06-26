@@ -10,7 +10,7 @@ dioxus serve
 * Cross platform
 * Full stack in rust, with a simple backend server
 * Platform support
-  - [ ] Web
+  - [x] Web
   - [ ] Native MacOS
   - [ ] Mobile ??
   - [ ] Terminal ??
@@ -19,7 +19,7 @@ dioxus serve
 
 - [x] Basic UI
 - [x] Basic move logic
-- [ ] Success? Or infinite run
+- [x] Success or fail
 - [ ] How to deploy
 - [ ] Log the highest score and the total score
 - [ ] CI/CD
