@@ -34,7 +34,8 @@ pub fn Cell(cx: Scope<BlockProps>) -> Element {
     let base_class = "text-lg bg-violet-300 flex justify-center items-center rounded-sm w-12 h-12";
     let (bg, text) = get_colors_from_score(cx.props.score);
     let cell_style = format!(
-        "color: {};
+        "transition: all .15s ease;
+        color: {};
         background-color: {};", text, bg);
 
     cx.render(rsx!(

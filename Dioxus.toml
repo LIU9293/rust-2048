@@ -16,7 +16,7 @@ asset_dir = "public"
 [web.app]
 
 # HTML title tag content
-title = "r2048"
+title = "rust-2048"
 
 [web.watcher]
 

@@ -9,7 +9,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- <script src="/static/darktheme.js"></script> -->
     {style_include}
-
     <style>
       html,
       body {
@@ -35,5 +34,19 @@
       });
     </script>
     {script_include}
+    <script>
+      // PLEASE HELP ME FIX THIS SHIT !!!
+      let counter = 1;
+      document.addEventListener('keydown', function(e) {
+        if (counter === 1) {
+          counter = 0
+          new_e = new e.constructor(e.type, e);
+          gamearea.dispatchEvent(new_e);
+          setTimeout(function() {
+            counter = 1
+          }, 100);
+        }
+      });
+    </script>
   </body>
 </html>

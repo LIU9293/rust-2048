@@ -1,22 +1,16 @@
 [package]
-name = "r2048"
+name = "rust-2048"
 version = "0.1.0"
 authors = ["liu9293 <liukai9293@qq.com>"]
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 dioxus = "0.3.0"
 dioxus-web = "0.3.0"
 log = "0.4.6"
-
-# WebAssembly Debug
 wasm-logger = "0.2.0"
 console_error_panic_hook = "0.1.7"
 rand = "0.8.5"
-web-sys = "0.3.64"
-wasm-bindgen = "0.2.87"
 
 [dependencies.getrandom]
 version = "0.2"
