@@ -1,5 +1,7 @@
 ## 2048 Game in Disxus
 
+Live Demo -> https://rust-2048.vercel.app/
+
 ### Test and run (Web)
 ```
 dioxus serve

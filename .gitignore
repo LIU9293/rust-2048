@@ -13,5 +13,5 @@ Cargo.lock
 # Added by cargo
 
 /target
-
 /dist
+.vercel
