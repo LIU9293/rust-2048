@@ -1,7 +1,7 @@
 [application]
 
 # App (Project) Name
-name = "r2048"
+name = "rust-2048"
 
 # Dioxus App Default Platform
 # desktop, web, mobile, ssr

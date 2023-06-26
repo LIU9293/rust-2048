@@ -4,4 +4,6 @@ source "$HOME/.cargo/env"
 
 cargo install dioxus-cli
 
+rustup target add wasm32-unknown-unknown
+
 dioxus build --release
