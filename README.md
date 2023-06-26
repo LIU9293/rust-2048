@@ -25,3 +25,7 @@ dioxus serve
 - [ ] How to deploy
 - [ ] Log the highest score and the total score
 - [ ] CI/CD
+
+### Server 
+
+TODO -> https://github.com/tokio-rs/axum

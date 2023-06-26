@@ -11,12 +11,12 @@ pub struct RowProps {
 }
 
 pub fn Row (cx: Scope<RowProps>) -> Element {
-  cx.render(rsx!(
-    div {
-        class: "flex flex-row gap-2",
-        (0..4).map(|i| rsx!{ Cell { score: cx.props.cells[i] } })
-    }
-  ))
+    cx.render(rsx!(
+        div {
+            class: "flex flex-row gap-2",
+            (0..4).map(|i| rsx!{ Cell { score: cx.props.cells[i] } })
+        }
+    ))
 }
 
 #[derive(PartialEq)]
@@ -46,29 +46,28 @@ pub fn Board(cx: Scope) -> Element {
             return;
         }
 
-        let new_data: Option<Board> = match evt.key() {
-            Key::ArrowUp => Some(add_random(&move_up(board_data.get()))),
-            Key::ArrowDown => Some(add_random(&&move_down(board_data.get()))),
-            Key::ArrowLeft => Some(add_random(&move_left(board_data.get()))),
-            Key::ArrowRight => Some(add_random(&&move_right(board_data.get()))),
-            _ => None
+        let new_data: Board = match evt.key() {
+            Key::ArrowUp => add_random(&move_up(board_data.get())),
+            Key::ArrowDown => add_random(&&move_down(board_data.get())),
+            Key::ArrowLeft => add_random(&move_left(board_data.get())),
+            Key::ArrowRight => add_random(&&move_right(board_data.get())),
+            _ => board_data.get().clone()
         };
 
-        match new_data {
-            Some(new_data) => {
-                match check_and_do_next(&new_data) {
-                    GameStatus::Win => {
-                        board_data.set(new_data);
-                        game_status.set(GameStatus::Win);
-                    },
-                    GameStatus::Fail => {
-                        board_data.set(new_data);
-                        game_status.set(GameStatus::Fail);
-                    },
-                    GameStatus::Playing => { board_data.set(new_data); },
-                }
+        if new_data == *board_data.get() {
+            return;
+        }
+
+        match check_and_do_next(&new_data) {
+            GameStatus::Win => {
+                board_data.set(new_data);
+                game_status.set(GameStatus::Win);
             },
-            None => {}
+            GameStatus::Fail => {
+                board_data.set(new_data);
+                game_status.set(GameStatus::Fail);
+            },
+            GameStatus::Playing => { board_data.set(new_data); },
         }
     };
     
@@ -99,9 +98,7 @@ pub fn Board(cx: Scope) -> Element {
                         format!("Highest: {}", highest_score)
                     }
                 }
-    
-                (0..4).map(|i| rsx!{ Row { cells: board_data[i] } })
-    
+                (0..4).map(|i| rsx!{Row{ cells: board_data[i] }})
                 match game_status.get() {
                     GameStatus::Win => rsx!( div {
                         class: "flex flex-col items-center",
@@ -136,19 +133,17 @@ pub fn Board(cx: Scope) -> Element {
                     } ),
                     _ => rsx!(div{})
                 }
-            
             }
-            
             div {
                 class: "flex flex-col mt-4 text-sm",
                 p {
-                    class: "text-sm text-slate-400",
-                    "Learning rust using Dioxus"
+                    class: "text-slate-400",
+                    "Learn rust with Dioxus"
                 }
                 a {
-                    class: "text-sm text-slate-300",
+                    class: "text-slate-300",
                     href: "https://github.com/LIU9293/rust-2048",
-                    "Github"
+                    "> Github"
                 }
             }
         }
