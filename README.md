@@ -2,9 +2,13 @@
 
 Live Demo -> https://rust-2048.vercel.app/
 
-### Test and run (Web)
+### Test and run
 ```
-dioxus serve
+// web
+dioxus serve --platform web
+
+// desktop
+dioxus serve --platform desktop
 ```
 
 ### Target
@@ -13,7 +17,7 @@ dioxus serve
 * Full stack in rust, with a simple backend server
 * Platform support
   - [x] Web
-  - [ ] Native MacOS
+  - [x] Native MacOS
   - [ ] Mobile ??
   - [ ] Terminal ??
 
@@ -22,7 +26,7 @@ dioxus serve
 - [x] Basic UI
 - [x] Basic move logic
 - [x] Success or fail
-- [ ] How to deploy
+- [x] How to deploy
   * Web -> scripts/build-web.sh
   * Desktop -> scripts/build-desktop.sh
 - [x] Log the highest score and the total score
