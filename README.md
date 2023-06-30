@@ -23,8 +23,12 @@ dioxus serve
 - [x] Basic move logic
 - [x] Success or fail
 - [ ] How to deploy
-- [ ] Log the highest score and the total score
+  * Web -> scripts/build-web.sh
+  * Desktop -> scripts/build-desktop.sh
+- [x] Log the highest score and the total score
 - [ ] CI/CD
+  * Web -> Vercel, done
+  * Desktop?
 
 ### Server 
 

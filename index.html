@@ -7,11 +7,9 @@
     <meta charset="UTF-8" />
     <link rel="icon shortcut" type="image/png" href="static/favicon.png" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- <script src="/static/darktheme.js"></script> -->
     {style_include}
     <style>
-      html,
-      body {
+      html, body {
         background-color: #495057;
         color: white;
       }
@@ -38,6 +36,10 @@
       // PLEASE HELP ME FIX THIS SHIT !!!
       let counter = 1;
       document.addEventListener('keydown', function(e) {
+        if (!document.getElementById('gamearea')) {
+          return
+        }
+
         if (counter === 1) {
           counter = 0
           new_e = new e.constructor(e.type, e);
