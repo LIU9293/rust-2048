@@ -1,8 +1,11 @@
 #![allow(non_snake_case)]
+mod pages;
 mod components;
+mod utils;
 use dioxus::prelude::*;
-use crate::components::board::Board;
-use dioxus_router::{Link, Route, Router};
+use dioxus_router::{Route, Router};
+use crate::pages::game::Game;
+use crate::pages::homepage::Homepage;
 
 #[cfg(not(target_arch = "wasm32"))]
 use dioxus_desktop::Config;
@@ -59,8 +62,8 @@ fn main() {
     );
     
     #[cfg(target_arch = "wasm32")]
-    wasm_logger::init(wasm_logger::Config::default());
-    console_error_panic_hook::set_once();
+    // wasm_logger::init(wasm_logger::Config::default());
+    // console_error_panic_hook::set_once();
     dioxus_web::launch(app);
 }
 
@@ -69,24 +72,8 @@ fn app(cx: Scope) -> Element {
         div {
             class: "flex flex-col p-4 align-center",
             Router {
-                Route { to: "/game", Board {} }
-                Route {
-                    to: "/",
-                    div {
-                        style: "align-self: center;",
-                        class: "flex flex-col",            
-                        div {
-                            class: "text-center mb-4",
-                            "homepage"
-                        },
-                        Link { to: "/game", 
-                            button { 
-                                class: "text-xs rounded-full bg-sky-500 text-white px-4 py-2",
-                                "Start Game"
-                            }
-                        }
-                    }
-                }
+                Route { to: "/", Homepage{} }
+                Route { to: "/game", Game{} }
             }
         }
     ))
