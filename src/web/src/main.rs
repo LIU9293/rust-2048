@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
-mod components;
 use dioxus::prelude::*;
-use crate::components::board::Board;
+use components::board::Board;
 
 fn main() {
     // init debug tool for WebAssembly

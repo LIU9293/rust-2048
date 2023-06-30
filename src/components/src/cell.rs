@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 
 const COLOR_MAP: [(i32, &str, &str); 12] = [

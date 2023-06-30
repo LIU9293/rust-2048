@@ -1,0 +1,12 @@
+[package]
+name = "desktop"
+version = "0.0.1"
+authors = ["Kai Liu <mylock.kai@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+dioxus = "0.3.0"
+dioxus-desktop = "0.3.0"
+rand = "0.8.5"
+getrandom = { version = "0.2", features = ["js"] }
+components = { path = "../components" }

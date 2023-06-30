@@ -1,9 +1,10 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus::html::input_data::keyboard_types::Key;
 use dioxus::html::KeyboardEvent;
 
-use crate::components::cell::Cell;
-use crate::components::logic::{Board, move_up, move_down, move_left, move_right, add_random, get_initial_board_data, check_fail, check_win};
+use crate::cell::Cell;
+use crate::logic::{Board, move_up, move_down, move_left, move_right, add_random, get_initial_board_data, check_fail, check_win};
 
 #[derive(PartialEq, Props)]
 pub struct RowProps {

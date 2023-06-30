@@ -1,6 +1,13 @@
 {
   "rust-analyzer.linkedProjects": [
     "./Cargo.toml",
-    "./Cargo.toml"
+    "./Cargo.toml",
+    "./src/desktop/Cargo.toml",
+    "./src/web/Cargo.toml",
+    "./src/web/Cargo.toml",
+    "./src/web/Cargo.toml",
+    "./src/web/Cargo.toml",
+    "./src/web/Cargo.toml",
+    "./src/components/Cargo.toml"
   ]
 }
