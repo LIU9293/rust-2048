@@ -1,43 +1,11 @@
-#![allow(non_snake_case)]
 use dioxus::prelude::*;
 use dioxus::html::input_data::keyboard_types::Key;
 use dioxus::html::KeyboardEvent;
+use crate::components::row::Row;
+use crate::utils::types::{Board, GameStatus};
+use crate::utils::logic::{get_initial_board_data, add_random, move_up, move_down, move_left, move_right, check_and_do_next};
 
-use crate::cell::Cell;
-use crate::logic::{Board, move_up, move_down, move_left, move_right, add_random, get_initial_board_data, check_fail, check_win};
-
-#[derive(PartialEq, Props)]
-pub struct RowProps {
-    cells: [i32; 4],
-}
-
-pub fn Row (cx: Scope<RowProps>) -> Element {
-    cx.render(rsx!(
-        div {
-            class: "flex flex-row gap-2",
-            (0..4).map(|i| rsx!{ Cell { score: cx.props.cells[i] } })
-        }
-    ))
-}
-
-#[derive(PartialEq)]
-enum GameStatus {
-    Win,
-    Fail,
-    Playing,
-}
-
-fn check_and_do_next (board_status: &Board) -> GameStatus {
-    if check_win(board_status) {
-        return GameStatus::Win;
-    }
-    if check_fail(board_status) {
-        return GameStatus::Fail;
-    }
-    GameStatus::Playing
-}
-
-pub fn Board(cx: Scope) -> Element {
+pub fn Game(cx: Scope) -> Element {
     let game_status = use_state(cx, || GameStatus::Playing);
     let init_board_data: Board = get_initial_board_data();
     let board_data: &UseState<Board> = use_state(cx, || init_board_data);

@@ -1,14 +1,11 @@
 [package]
-name = "web"
+name = "app"
 version = "0.0.1"
 authors = ["Kai Liu <mylock.kai@gmail.com>"]
 edition = "2021"
 
 [dependencies]
 dioxus = "0.3.2"
-dioxus-web = "0.3.2"
+dioxus-router = "0.3.0"
 rand = "0.8.5"
 getrandom = { version = "0.2", features = ["js"] }
-wasm-logger = "0.2.0"
-console_error_panic_hook = "0.1.7"
-components = { path = "../components" }

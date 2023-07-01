@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
-use components::board::Board;
+use app::board::Board;
 
 fn main() {
     // init debug tool for WebAssembly

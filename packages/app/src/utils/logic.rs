@@ -1,13 +1,10 @@
 use rand::seq::SliceRandom;
 use rand::Rng;
-
-pub type Board = [[i32; 4]; 4];
+use crate::utils::types::{Board, GameStatus};
 
 pub fn get_initial_board_data () -> [[i32; 4]; 4] {
     let mut init_board_data: [[i32; 4]; 4] = [[0; 4]; 4];
     let mut rng = rand::thread_rng();
-  
-    // Create a vector of all possible positions
     let mut positions: Vec<(usize, usize)> = (0..4).flat_map(|i| (0..4).map(move |j| (i, j))).collect();
   
     for _ in 0..3 {
@@ -165,4 +162,14 @@ pub fn check_fail(board: &Board) -> bool {
         }
     }
     true
+}
+
+pub fn check_and_do_next (board_status: &Board) -> GameStatus {
+    if check_win(board_status) {
+        return GameStatus::Win;
+    }
+    if check_fail(board_status) {
+        return GameStatus::Fail;
+    }
+    GameStatus::Playing
 }
