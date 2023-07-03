@@ -8,6 +8,8 @@
     "./Cargo.toml",
     "./Cargo.toml",
     "./Cargo.toml",
-    "./Cargo.toml"
-  ]
+    "./Cargo.toml",
+    "./packages/shared/Cargo.toml"
+  ],
+  "rust-analyzer.showUnlinkedFileNotification": false
 }

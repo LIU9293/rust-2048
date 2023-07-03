@@ -1,30 +1,37 @@
-[package]
-name = "rust-2048"
-version = "0.1.0"
-description = "It's a 2048 game written in Rust."
-authors = ["liu9293 <liukai9293@qq.com>"]
-edition = "2021"
+# [package]
+# name = "rust-2048"
+# version = "0.1.0"
+# description = "It's a 2048 game written in Rust."
+# authors = ["liu9293 <liukai9293@qq.com>"]
+# edition = "2021"
 
-[dependencies]
-dioxus-router = "0.3.0"
-rand = "0.8.5"
-getrandom = { version = "0.2", features = ["js"] }
+# [dependencies]
+# dioxus-router = "0.3.0"
+# rand = "0.8.5"
+# getrandom = { version = "0.2", features = ["js"] }
 
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-dioxus = "0.3.0"
-dioxus-desktop = "0.3.0"
+# [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# dioxus = "0.3.0"
+# dioxus-desktop = "0.3.0"
 
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-dioxus = "0.3.2"
-dioxus-web = "0.3.2"
+# [target.'cfg(target_arch = "wasm32")'.dependencies]
+# dioxus = "0.3.2"
+# dioxus-web = "0.3.2"
 
-[package.metadata.bundle]
-name = "Rust 2048"
-identifier = "com.rust.kaixiaozao"
-version = "0.0.1"
-copyright = "Copyright (c) KaiXiaoZao 2023. All rights reserved."
-category = "Game"
-short_description = "2048 game"
-long_description = """
-It's a 2048 game written in Rust.
-"""
+# [package.metadata.bundle]
+# name = "Rust 2048"
+# identifier = "com.rust.kaixiaozao"
+# version = "0.0.1"
+# copyright = "Copyright (c) KaiXiaoZao 2023. All rights reserved."
+# category = "Game"
+# short_description = "2048 game"
+# long_description = """
+# It's a 2048 game written in Rust.
+# """
+
+[workspace]
+members = [
+    "packages/client",
+    "packages/shared",
+    "packages/server"
+]

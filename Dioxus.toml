@@ -1,8 +1,9 @@
 [application]
 name = "rust-2048"
 default_platform = "web"
-out_dir = "dist"
-asset_dir = "public"
+out_dir = "../../dist"
+asset_dir = "../../public"
+sub_package = "packages/client"
 
 [web.app]
 title = "rust-2048"

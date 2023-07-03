@@ -1,14 +1,43 @@
 use dioxus::prelude::*;
 use dioxus::html::input_data::keyboard_types::Key;
 use dioxus::html::KeyboardEvent;
+use shared::types::{Board, GameStatus, ProgressReqeust};
+use reqwest;
+use shared::logic::{get_initial_board_data, add_random, move_up, move_down, move_left, move_right, check_and_do_next};
+use log;
 use crate::components::row::Row;
-use crate::utils::types::{Board, GameStatus};
-use crate::utils::logic::{get_initial_board_data, add_random, move_up, move_down, move_left, move_right, check_and_do_next};
 
 pub fn Game(cx: Scope) -> Element {
     let game_status = use_state(cx, || GameStatus::Playing);
     let board_data: &UseState<Board> = use_state(cx, || get_initial_board_data());
-    
+    let is_first_load = use_state(cx, || true);
+
+    use_effect(cx, (is_first_load, board_data), |(is_first_load, board_data)| async move {
+        if !is_first_load.get() {
+            return;
+        }
+            
+        let client = reqwest::Client::new();
+        let res = client.get("http://localhost:3000/progress").send().await;
+        match res {
+            Ok(response) => {
+                let payload = response.json::<ProgressReqeust>().await;
+                match payload {
+                    Ok(data) => {
+                        is_first_load.set(false);
+                        board_data.set(data.board);
+                    },
+                    Err(err) => {
+                        log::error!("Failed to parse JSON: {}", err);
+                    }
+                }
+            },
+            Err(err) => {
+                log::error!("Failed to send request: {}", err);
+            }
+        }
+    });
+
     let handle_key_down_event = move |evt: KeyboardEvent| -> () {
         if *game_status.get() != GameStatus::Playing {
             return;
@@ -36,7 +65,26 @@ pub fn Game(cx: Scope) -> Element {
                 game_status.set(GameStatus::Fail);
             },
             GameStatus::Playing => { board_data.set(new_data); },
-        }
+        }    
+        
+        cx.spawn({
+            async move {
+                let client = reqwest::Client::new();
+                let res = client.post("http://localhost:3000/progress")
+                    .json(&ProgressReqeust {
+                        board: new_data
+                    })
+                    .send()
+                    .await;
+                
+                match res {
+                    Ok(_) => {},
+                    Err(err) => {
+                        log::error!("Failed to record progress: {}", err);
+                    }
+                }
+            }
+        });
     };
     
     let total_score = board_data.get().iter().flatten().sum::<i32>();

@@ -4,6 +4,10 @@ Live Demo -> https://rust-2048.vercel.app/
 
 ### Test and run
 ```
+1. Run server
+cargo run -p server
+
+2. Run client
 // web
 dioxus serve --platform web
 
@@ -33,6 +37,8 @@ dioxus serve --platform desktop
 - [ ] CI/CD
   * Web -> Vercel, done
   * Desktop?
+- [x] Server, record game progress
+- [ ] Server, record progress for multiple users
 
 ### Server 
 

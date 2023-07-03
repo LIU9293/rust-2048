@@ -1,6 +1,6 @@
 use rand::seq::SliceRandom;
 use rand::Rng;
-use crate::utils::types::{Board, GameStatus};
+use crate::types::{Board, GameStatus};
 
 pub fn get_initial_board_data () -> [[i32; 4]; 4] {
     let mut init_board_data: [[i32; 4]; 4] = [[0; 4]; 4];

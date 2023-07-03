@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 mod pages;
 mod components;
-mod utils;
+// mod utils;
 use dioxus::prelude::*;
 use dioxus_router::{Route, Router};
 use crate::pages::game::Game;
@@ -24,15 +24,8 @@ fn main() {
                     <script src="https://cdn.tailwindcss.com"></script>
                     <style>
                         html,
-                        body {
-                            background-color: #495057;
-                            color: white;
-                        }
-
-                        #main {
-                            min-height: 100vh;
-                            width: 100%;
-                        }
+                        body { background-color: #495057; color: white; }
+                        #main { min-height: 100vh; width: 100%; }
                     </style>
                 </head>
                 <body>
@@ -45,12 +38,10 @@ fn main() {
                             return
                         }
                         if (counter === 1) {
-                        counter = 0
-                        new_e = new e.constructor(e.type, e);
-                        gamearea.dispatchEvent(new_e);
-                        setTimeout(function() {
-                            counter = 1
-                        }, 100);
+                            counter = 0
+                            new_e = new e.constructor(e.type, e);
+                            gamearea.dispatchEvent(new_e);
+                            setTimeout(function() { counter = 1 }, 20);
                         }
                     });
                     </script>
@@ -63,7 +54,6 @@ fn main() {
     
     #[cfg(target_arch = "wasm32")]
     // wasm_logger::init(wasm_logger::Config::default());
-    // console_error_panic_hook::set_once();
     dioxus_web::launch(app);
 }
 
