@@ -7,19 +7,18 @@ use crate::utils::logic::{get_initial_board_data, add_random, move_up, move_down
 
 pub fn Game(cx: Scope) -> Element {
     let game_status = use_state(cx, || GameStatus::Playing);
-    let init_board_data: Board = get_initial_board_data();
-    let board_data: &UseState<Board> = use_state(cx, || init_board_data);
+    let board_data: &UseState<Board> = use_state(cx, || get_initial_board_data());
     
-    let handle_key_down_event = move |evt: KeyboardEvent|  {
+    let handle_key_down_event = move |evt: KeyboardEvent| -> () {
         if *game_status.get() != GameStatus::Playing {
             return;
         }
 
         let new_data: Board = match evt.key() {
             Key::ArrowUp => add_random(&move_up(board_data.get())),
-            Key::ArrowDown => add_random(&&move_down(board_data.get())),
+            Key::ArrowDown => add_random(&move_down(board_data.get())),
             Key::ArrowLeft => add_random(&move_left(board_data.get())),
-            Key::ArrowRight => add_random(&&move_right(board_data.get())),
+            Key::ArrowRight => add_random(&move_right(board_data.get())),
             _ => board_data.get().clone()
         };
 

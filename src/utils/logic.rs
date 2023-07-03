@@ -6,7 +6,7 @@ pub fn get_initial_board_data () -> [[i32; 4]; 4] {
     let mut init_board_data: [[i32; 4]; 4] = [[0; 4]; 4];
     let mut rng = rand::thread_rng();
     let mut positions: Vec<(usize, usize)> = (0..4).flat_map(|i| (0..4).map(move |j| (i, j))).collect();
-  
+
     for _ in 0..3 {
         // Randomly choose a position and remove it from the vector
         if let Some((row, col)) = positions.choose(&mut rng).cloned() {
@@ -14,7 +14,7 @@ pub fn get_initial_board_data () -> [[i32; 4]; 4] {
             init_board_data[row][col] = 2;
         }
     }
-    
+
     init_board_data
 }  
 
