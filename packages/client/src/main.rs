@@ -46,6 +46,33 @@ fn main() {
                         }
                     });
                     </script>
+                    <script>
+                        try {
+                            const theme = localStorage.getItem('theme')
+                            if (theme === 'dark') {
+                            document.documentElement.setAttribute('data-theme', 'black');
+                            }
+
+                            if (theme === 'light') {
+                            document.documentElement.setAttribute('data-theme', 'lofi');
+                            }
+
+                            if (theme === 'system') {
+                            var preference_query = window.matchMedia('(prefers-color-scheme: dark)');
+                            function checkPreference(query) {
+                                if (query.matches) {
+                                    document.documentElement.setAttribute('data-theme', 'black');
+                                    localStorage.setItem('theme', 'system');
+                                } else {
+                                    document.documentElement.setAttribute('data-theme', 'lofi');
+                                    localStorage.setItem('theme', 'system');
+                                }
+                            }
+                            checkPreference(preference_query);
+                            preference_query.addEventListener("change", checkPreference);
+                            }
+                        } catch (error) {}
+                    </script>
                 </body>
                 </html>
             "#

@@ -4,6 +4,15 @@ It's a demo application for me to figure out if I can use rust/dioxus in product
 
 Live Demo -> https://rust-2048.vercel.app/
 
+### Features in this application
+
+- [x] Use tailwind and daisy css for styling
+- [x] Handle Dark / light theme
+- [x] Try to inplenment i18n use fermi state
+- [x] Access cookies / localstorage
+- [x] Build web and native app
+- [x] A simple server to record user progress
+
 ### Test and run
 ```
 1. Run server
@@ -45,14 +54,6 @@ dioxus serve --platform desktop
 - [x] Server, record game progress
 - [ ] Server, record progress for multiple users
 
-### Things need to be figure out
-
-- [x] Component library / tailwind
-- [x] Dark / light theme
-- [x] i18n
-- [x] Access cookies / localstorage
-- [x] Can visit route url
-
 Github
-
+-
 https://github.com/LIU9293/rust-2048/
