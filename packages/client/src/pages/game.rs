@@ -1,3 +1,4 @@
+use fermi::*;
 use dioxus::prelude::*;
 use dioxus::html::input_data::keyboard_types::Key;
 use dioxus::html::KeyboardEvent;
@@ -6,13 +7,15 @@ use reqwest;
 use shared::logic::{get_initial_board_data, add_random, move_up, move_down, move_left, move_right, check_and_do_next};
 use log;
 use crate::components::row::Row;
+use shared::translate::TRANSLATION;
 
 pub fn Game(cx: Scope) -> Element {
     let game_status = use_state(cx, || GameStatus::Playing);
     let board_data: &UseState<Board> = use_state(cx, || get_initial_board_data());
     let is_first_load = use_state(cx, || true);
+    let translator = use_read(cx, TRANSLATION);
 
-    use_effect(cx, (is_first_load, board_data), |(is_first_load, board_data)| async move {
+    use_effect(cx, (is_first_load, board_data, game_status), |(is_first_load, board_data, game_status)| async move {
         if !is_first_load.get() {
             return;
         }
@@ -26,6 +29,16 @@ pub fn Game(cx: Scope) -> Element {
                     Ok(data) => {
                         is_first_load.set(false);
                         board_data.set(data.board);
+
+                        match check_and_do_next(&data.board) {
+                            GameStatus::Win => {
+                                game_status.set(GameStatus::Win);
+                            },
+                            GameStatus::Fail => {
+                                game_status.set(GameStatus::Fail);
+                            },
+                            GameStatus::Playing => { game_status.set(GameStatus::Playing); },
+                        }
                     },
                     Err(err) => {
                         log::error!("Failed to parse JSON: {}", err);
@@ -92,29 +105,28 @@ pub fn Game(cx: Scope) -> Element {
 
     cx.render(rsx!(
         div {
-            style: "align-self: center;",
-            class: "flex flex-col",
+            class: "flex flex-col items-center bg-base-200",
             div {
-                style: "background-color: #bbada0; margin-top: 100px;",
-                class: "flex flex-col gap-2 p-4 rounded-md focus:outline-none",
+                class: "card inline-block bg-base-100 shadow-xl mx-auto my-16 p-8",
                 id: "gamearea",
                 onkeydown: handle_key_down_event,
                 div {
-                    class: "text-center text-2xl font-bold",
-                    "Rust 2048"
+                    class: "stats flex my-4",
+                    div {
+                        class: "stat",
+                        div { class: "stat-title", translator.get("game.total_score".to_string()) }
+                        div { class: "stat-value text-primary", format!("{}", total_score) }
+                    }
+                    div {
+                        class: "stat",
+                        div { class: "stat-title", translator.get("game.highest_block".to_string()) }
+                        div { class: "stat-value text-primary", format!("{}", highest_score) }
+                    }
                 }
                 div {
-                    class: "flex flex-col",
-                    div {
-                        class: "flex flex-1",
-                        format!("Total: {}", total_score)
-                    }
-                    div {
-                        class: "flex flex-1",
-                        format!("Highest: {}", highest_score)
-                    }
+                    class: "flex flex-col gap-4",
+                    (0..4).map(|i| rsx!{Row{ cells: board_data[i] }})
                 }
-                (0..4).map(|i| rsx!{Row{ cells: board_data[i] }})
                 match game_status.get() {
                     GameStatus::Win => rsx!( div {
                         class: "flex flex-col items-center",
@@ -133,13 +145,13 @@ pub fn Game(cx: Scope) -> Element {
                         
                     } ),
                     GameStatus::Fail => rsx!( div { 
-                        class: "flex flex-col items-center",
+                        class: "flex flex-col items-center mt-8",
                         div {
-                            class: "text-center text-lg",
-                            "You Failed!" 
+                            class: "text-center text-xl font-bold",
+                            "You Failed!"
                         }
                         button {
-                                class: "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded",
+                                class: "btn btn-primary mt-4",
                                 onclick: |_| {
                                     board_data.set(get_initial_board_data());
                                     game_status.set(GameStatus::Playing);
@@ -149,19 +161,7 @@ pub fn Game(cx: Scope) -> Element {
                     } ),
                     _ => rsx!(div{})
                 }
-            }
-            div {
-                class: "flex flex-col mt-4 text-sm",
-                p {
-                    class: "text-slate-400",
-                    "Learn rust with Dioxus"
-                }
-                a {
-                    class: "text-slate-300",
-                    href: "https://github.com/LIU9293/rust-2048",
-                    "> Github"
-                }
-            }
+            }    
         }
     ))
 }

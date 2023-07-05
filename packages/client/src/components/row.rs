@@ -9,7 +9,7 @@ pub struct RowProps {
 pub fn Row (cx: Scope<RowProps>) -> Element {
     cx.render(rsx!(
         div {
-            class: "flex flex-row gap-2",
+            class: "flex flex-row gap-4",
             (0..4).map(|i| rsx!{ Cell { score: cx.props.cells[i] } })
         }
     ))

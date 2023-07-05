@@ -6,7 +6,7 @@ authors = ["liu9293 <liukai9293@qq.com>"]
 edition = "2021"
 
 [dependencies]
-dioxus-router = "0.3.0"
+dioxus-router = { version = "0.3.0", features = ["web"] }
 rand = "0.8.5"
 getrandom = { version = "0.2", features = ["js"] }
 futures = "0.3"
@@ -15,6 +15,8 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = "0.4"
 shared = { path = "../shared" }
+dioxus-html-macro = "0.3.0"
+fermi = "0.3.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 dioxus = "0.3.0"

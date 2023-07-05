@@ -1,0 +1,14 @@
+{
+  "name": "2048",
+  "version": "0.0.1",
+  "description": "It's a demo application for me to figure out if I can use rust/dioxus in production code, this codebase contains a frontend client that can compiled to Web(wasm) and Desktop, a simple rust server to handle some basic API logic and some shared components between client and server.",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "css": "tailwindcss -i ./input.css -o ./dist/tailwind.css --watch"
+  },
+  "author": "KaiXiaoZao",
+  "license": "MIT",
+  "devDependencies": {
+    "daisyui": "^3.1.7"
+  }
+}

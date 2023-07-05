@@ -11,6 +11,7 @@ title = "rust-2048"
 [web.watcher]
 reload_html = true
 watch_path = ["src"]
+index_on_404 = true
 
 [web.resource]
 style = []

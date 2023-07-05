@@ -14,3 +14,5 @@ Cargo.lock
 /dist
 .vercel
 .DS_Store
+
+node_modules

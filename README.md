@@ -1,5 +1,7 @@
 ## 2048 Game in Disxus
 
+It's a demo application for me to figure out if I can use rust/dioxus in production code, this codebase contains a frontend client that can compiled to Web(wasm) and Desktop, a simple rust server to handle some basic API logic and some shared components between client and server.
+
 Live Demo -> https://rust-2048.vercel.app/
 
 ### Test and run
@@ -37,9 +39,20 @@ dioxus serve --platform desktop
 - [ ] CI/CD
   * Web -> Vercel, done
   * Desktop?
-- [x] Server, record game progress
-- [ ] Server, record progress for multiple users
 
 ### Server 
 
-TODO -> https://github.com/tokio-rs/axum
+- [x] Server, record game progress
+- [ ] Server, record progress for multiple users
+
+### Things need to be figure out
+
+- [x] Component library / tailwind
+- [x] Dark / light theme
+- [x] i18n
+- [x] Access cookies / localstorage
+- [x] Can visit route url
+
+Github
+
+https://github.com/LIU9293/rust-2048/
