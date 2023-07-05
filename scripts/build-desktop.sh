@@ -6,6 +6,6 @@ cargo install dioxus-cli
 cargo install cargo-bundle
 
 npm install
-npm run css
+npm run build
 
 cargo-bundle bundle --release

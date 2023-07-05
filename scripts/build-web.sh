@@ -5,6 +5,6 @@ cargo install dioxus-cli
 rustup target add wasm32-unknown-unknown
 
 npm install
-npm run css
+npm run build
 
 dioxus build --release
