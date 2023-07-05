@@ -91,7 +91,6 @@ fn app(cx: Scope) -> Element {
         Router {
             Route { to: "/", Homepage{} }
             Route { to: "/game", Game{} }
-            Route { to: "/game/", Game{} }
             Route { to: "", Homepage{} }
         }
         Footer{}
