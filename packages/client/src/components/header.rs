@@ -82,12 +82,6 @@ pub fn LanguageButton<'a> (cx: Scope<'a, LanguageButtonProps<'a>>) -> Element<'a
 pub fn Header(cx: Scope) -> Element {
     let set_translator = use_set(cx, TRANSLATION);
     let original = use_read(cx, TRANSLATION);
-    // let original_translator = original.clone();
-    // translator.set_language("cn".to_string());
-
-    let a = |evt: MouseEvent| {
-        set_translator(original.change_to("zh".to_string()))
-    };
 
     cx.render(html!(
         <div class="navbar bg-base-100">

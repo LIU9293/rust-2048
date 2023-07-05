@@ -54,7 +54,6 @@ fn main() {
     );
     
     #[cfg(target_arch = "wasm32")]
-    wasm_logger::init(wasm_logger::Config::default());
     dioxus_web::launch(app);
 }
 

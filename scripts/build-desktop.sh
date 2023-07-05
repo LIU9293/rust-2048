@@ -5,4 +5,7 @@ source "$HOME/.cargo/env"
 cargo install dioxus-cli
 cargo install cargo-bundle
 
+npm install
+npm run css
+
 cargo-bundle bundle --release
