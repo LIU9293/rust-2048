@@ -55,7 +55,7 @@ pub fn Game(cx: Scope) -> Element {
                     }
                 }
             },
-            StorageError => {
+            _StorageError => {
                 log::info!("No uuid found, creating one...");
                 let uuid = Uuid::new_v4();
                 LocalStorage::set("uuid", uuid.to_string()).unwrap();
@@ -113,7 +113,7 @@ pub fn Game(cx: Scope) -> Element {
                             }
                         }
                     },
-                    StorageError => {
+                    _StorageError => {
                         log::info!("No uuid found, skip...");
                     }
                 }

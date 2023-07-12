@@ -3,6 +3,7 @@
 It's a demo application for me to figure out if I can use rust/dioxus in production code, this codebase contains a frontend client that can compiled to Web(wasm) and Desktop, a simple rust server to handle some basic API logic and some shared components between client and server.
 
 Live Demo -> https://rust-2048.vercel.app/
+API -> https://rust-2048-api.onrender.com/leaderboard
 
 ### Features in this application
 
@@ -12,6 +13,7 @@ Live Demo -> https://rust-2048.vercel.app/
 - [x] Access cookies / localstorage
 - [x] Build web and native app
 - [x] A simple server to record user progress
+- [x] Leaderboard
 
 ### Test and run
 ```
@@ -45,14 +47,16 @@ dioxus serve --platform desktop
   * Web -> scripts/build-web.sh
   * Desktop -> scripts/build-desktop.sh
 - [x] Log the highest score and the total score
-- [ ] CI/CD
+- [x] CI/CD
   * Web -> Vercel, done
+  * Server -> Render.com
   * Desktop?
 
 ### Server 
 
-- [x] Server, record game progress
-- [ ] Server, record progress for multiple users
+- [x] Record game progress
+- [x] Record progress for multiple users
+- [x] Leaderboard
 
 Github
 -
