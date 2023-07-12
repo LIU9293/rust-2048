@@ -57,3 +57,14 @@ pub struct DbBoardRow {
   
 pub type DbBoard = Vec<DbBoardRow>;
   
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LeaderboardRow {
+    pub uuid: String,
+    pub score: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LeaderboardResponse {
+    pub success: bool,
+    pub leaderboard: Vec<LeaderboardRow>,
+}

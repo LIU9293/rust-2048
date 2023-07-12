@@ -120,6 +120,15 @@ pub fn Game(cx: Scope) -> Element {
             }
         });
     };
+
+    let restart_game = |_| -> () {
+        board_data.set(get_initial_board_data());
+        game_status.set(GameStatus::Playing);
+        
+        // reset game uuid
+        let uuid = Uuid::new_v4();
+        LocalStorage::set("uuid", uuid.to_string()).unwrap();
+    };
     
     let total_score = board_data.get().iter().flatten().sum::<i32>();
     let highest_score = board_data.get().iter().flatten().max().unwrap_or(&0);
@@ -157,13 +166,9 @@ pub fn Game(cx: Scope) -> Element {
                         }
                         button {
                                 class: "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded",
-                                onclick: |_| {
-                                    board_data.set(get_initial_board_data());
-                                    game_status.set(GameStatus::Playing);
-                                },
+                                onclick: restart_game,
                                 "Restart"
                         }
-                        
                     } ),
                     GameStatus::Fail => rsx!( div { 
                         class: "flex flex-col items-center mt-8",
@@ -173,10 +178,7 @@ pub fn Game(cx: Scope) -> Element {
                         }
                         button {
                                 class: "btn btn-primary mt-4",
-                                onclick: |_| {
-                                    board_data.set(get_initial_board_data());
-                                    game_status.set(GameStatus::Playing);
-                                },
+                                onclick: restart_game,
                                 "Restart"
                         }
                     } ),

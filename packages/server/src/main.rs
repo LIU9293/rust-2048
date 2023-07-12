@@ -14,7 +14,10 @@ use shared::types::{
   GetProgressResponse,
   SaveProgressResponse,
   ProgressReqeust,
-  DbBoard};
+  DbBoard,
+  LeaderboardRow,
+  LeaderboardResponse
+};
 use shared::logic::get_initial_board_data;
 use postgrest::Postgrest;
 use dotenv::dotenv;
@@ -54,6 +57,7 @@ async fn main() {
     let app = Router::new()
       .route("/", get(ping))
       .route("/progress", get(get_user_progress).post(save_user_progress))
+      .route("/leaderboard", get(get_leaderboard))
       .layer(
         tower_http::cors::CorsLayer::new()
           .allow_origin(Any)
@@ -81,9 +85,19 @@ async fn save_user_progress(
       Some(uuid) => {
         let client = &app_state.supabase_client;
         let board_str = serde_json::to_string(&input.board).unwrap();
-        let s = format!("[{{ \"uuid\": \"{}\", \"progress\": {} }}]",
+        let score = input.board
+          .iter()
+          .fold(0, |acc, row| {
+            acc + row.iter().fold(0, |acc, cell| {
+              acc + cell
+            })
+          });
+
+        let s = format!("[{{ \"uuid\": \"{}\", \"progress\": {}, \"score\": {} }}]",
           uuid, 
-          board_str);
+          board_str,
+          score);
+
         match client
             .from("user_progress")
             .upsert(s)
@@ -151,4 +165,41 @@ fn get_default_progress() -> (StatusCode, Json<GetProgressResponse>) {
       success: true,
       board: Some(get_initial_board_data()),
   }))
+}
+
+
+async fn get_leaderboard(
+  State(app_state): State<Arc<AppState>>,
+) -> impl IntoResponse {
+  let client = &app_state.supabase_client;
+
+  match client
+    .from("user_progress")
+    .select("*")
+    .order("score.desc")
+    .limit(20)
+    .execute()
+    .await {
+    Ok(res) => match res.text().await {
+        Ok(resp) => {
+          let leadboard_data: Vec<LeaderboardRow> = serde_json::from_str(&resp).unwrap();
+          (StatusCode::OK, Json(LeaderboardResponse {
+              success: true,
+              leaderboard: leadboard_data
+          }))
+        },
+        Err(_) => {
+          (StatusCode::OK, Json(LeaderboardResponse {
+            success: false,
+            leaderboard: vec![]
+          }))
+        }
+    }
+    Err(_) => {
+      (StatusCode::OK, Json(LeaderboardResponse {
+        success: false,
+        leaderboard: vec![]
+      }))
+    },
+  }
 }
