@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
 use dioxus::html::MouseEvent;
 use fermi::*;
+// use dioxus_router::Link;
 use dioxus_html_macro::html;
 use shared::translate::TRANSLATION;
 
@@ -90,7 +91,7 @@ pub fn Header(cx: Scope) -> Element {
             </div>
             <div class="flex-none">
                 <ul class="menu menu-horizontal px-1 items-center gap-2">
-                    <li><a>"Leaderboard"</a></li>
+                    <li><a href="/leaderboard">"Leaderboard"</a></li>
                     <li>
                         <details>
                             <summary>"Theme"</summary>

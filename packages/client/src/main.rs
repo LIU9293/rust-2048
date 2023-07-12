@@ -6,6 +6,7 @@ use dioxus::prelude::*;
 use dioxus_router::{Route, Router};
 use crate::pages::game::Game;
 use crate::pages::homepage::Homepage;
+use crate::pages::leaderboard::Leaderboard;
 use crate::components::footer::Footer;
 use crate::components::header::Header;
 
@@ -81,7 +82,7 @@ fn main() {
     );
     
     #[cfg(target_arch = "wasm32")]
-    // wasm_logger::init(wasm_logger::Config::default());
+    wasm_logger::init(wasm_logger::Config::default());
     dioxus_web::launch(app);
 }
 
@@ -92,6 +93,7 @@ fn app(cx: Scope) -> Element {
         Router {
             Route { to: "/", Homepage{} }
             Route { to: "/game", Game{} }
+            Route { to: "/leaderboard", Leaderboard{} }
             Route { to: "", Homepage{} }
         }
         Footer{}
