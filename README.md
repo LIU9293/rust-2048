@@ -24,7 +24,7 @@ cargo run -p server
 // web
 dioxus serve --platform web
 
-// desktop
+// desktop, desktop router is not working, try to exclude router for desktop
 dioxus serve --platform desktop
 ```
 

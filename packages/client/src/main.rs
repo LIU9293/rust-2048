@@ -87,14 +87,14 @@ fn main() {
 
 fn app(cx: Scope) -> Element {
     use_init_atom_root(cx);
-    cx.render(rsx! (        
-        Header{}
+    cx.render(rsx! (
         Router {
-            Route { to: "/", Homepage{} }
-            Route { to: "/game", Game{} }
-            Route { to: "/leaderboard", Leaderboard{} }
-            Route { to: "", Homepage{} }
+            Header{}
+                Route { to: "/", Homepage{} }
+                Route { to: "/game", Game{} }
+                Route { to: "/leaderboard", Leaderboard{} }
+                Route { to: "", Homepage{} }
+            Footer{}
         }
-        Footer{}
     ))
 }

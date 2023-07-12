@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use dioxus::html::MouseEvent;
 use fermi::*;
-// use dioxus_router::Link;
+use dioxus_router::Link;
 use dioxus_html_macro::html;
 use shared::translate::TRANSLATION;
 
@@ -85,13 +85,17 @@ pub fn Header(cx: Scope) -> Element {
     cx.render(html!(
         <div class="navbar bg-base-100">
             <div class="flex-1 font-bold px-4">
-               <a href="/">
+               <Link to="/">
                     <div class="text-xl">"Rust2048"</div>
-                </a>
+                </Link>
             </div>
             <div class="flex-none">
                 <ul class="menu menu-horizontal px-1 items-center gap-2">
-                    <li><a href="/leaderboard">"Leaderboard"</a></li>
+                    <li>
+                        <Link to="/leaderboard">
+                            "Leaderboard"
+                        </Link>
+                    </li>
                     <li>
                         <details>
                             <summary>"Theme"</summary>
