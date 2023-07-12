@@ -16,20 +16,6 @@ pub fn Game(cx: Scope) -> Element {
     let is_first_load = use_state(cx, || true);
     let translator = use_read(cx, TRANSLATION);
 
-    use_effect(cx, (is_first_load), |_| async move {
-        let a: Result<String, StorageError> = LocalStorage::get("uuid");
-        match a {
-            Ok(uuid) => {
-                log::info!("Found uuid: {}", uuid);
-            },
-            StorageError => {
-                log::info!("No uuid found, creating one...");
-                let uuid = Uuid::new_v4();
-                LocalStorage::set("uuid", uuid.to_string()).unwrap();
-            }
-        };
-    });
-
     use_effect(cx, (is_first_load, board_data, game_status), |(is_first_load, board_data, game_status)| async move {
         if !is_first_load.get() {
             return;
@@ -39,7 +25,7 @@ pub fn Game(cx: Scope) -> Element {
         match a {
             Ok(uuid) => {
                 let client = reqwest::Client::new();
-                let url = format!("http://localhost:3000/progress?uuid={uuid}", uuid=uuid);
+                let url = format!("https://rust-2048-api.onrender.com/progress?uuid={uuid}", uuid=uuid);
                 let res = client.get(url).send().await;
                 match res {
                     Ok(response) => {
@@ -104,7 +90,7 @@ pub fn Game(cx: Scope) -> Element {
                 game_status.set(GameStatus::Fail);
             },
             GameStatus::Playing => { board_data.set(new_data); },
-        }    
+        }
         
         cx.spawn({
             async move {
@@ -112,7 +98,7 @@ pub fn Game(cx: Scope) -> Element {
                 match a {
                     Ok(uuid) => {
                         let client = reqwest::Client::new();
-                        let res = client.post("http://localhost:3000/progress")
+                        let res = client.post("https://rust-2048-api.onrender.com/progress")
                             .json(&ProgressReqeust {
                                 board: new_data,
                                 uuid: Some(uuid),
