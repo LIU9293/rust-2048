@@ -1,5 +1,6 @@
 use rand::seq::SliceRandom;
 use rand::Rng;
+use uuid::Uuid;
 use crate::types::{Board, GameStatus};
 
 pub fn get_initial_board_data () -> [[i32; 4]; 4] {
@@ -172,4 +173,9 @@ pub fn check_and_do_next (board_status: &Board) -> GameStatus {
         return GameStatus::Fail;
     }
     GameStatus::Playing
+}
+
+pub fn get_uuid () -> String {
+    let uuid = Uuid::new_v4();
+    uuid.to_string()
 }

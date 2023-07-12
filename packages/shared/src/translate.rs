@@ -1,5 +1,6 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 use fermi::*;
+
 pub struct Translator {
   default_language: String,
   translations: HashMap<(String, String), String>,
@@ -18,14 +19,6 @@ impl Translator {
           default_language: language,
           translations: self.translations.clone(),
       }
-  }
-
-  pub fn set_language(&mut self, language: String) {
-      self.default_language = language;
-  }
-
-  pub fn get_language (&self) -> String {
-      self.default_language.clone()
   }
 
   fn insert(&mut self, key: (String, String), value: String) {

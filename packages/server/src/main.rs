@@ -2,20 +2,54 @@ use axum::{
   response::Json,
   response::IntoResponse,
   routing::get,
-  extract::{State},
   Router,
+  extract::{State, Query},
   http::StatusCode
 };
 use std::net::SocketAddr;
-use std::{collections::HashMap, sync::{Arc, RwLock}};
-use tower_http::cors::{Any};
-use shared::types::{Board, ProgressResponse, ProgressReqeust};
+use std::sync::Arc;
+use tower_http::cors::Any;
+use shared::types::{
+  UuidQuery,
+  GetProgressResponse,
+  SaveProgressResponse,
+  ProgressReqeust,
+  DbBoard};
+use shared::logic::get_initial_board_data;
+use postgrest::Postgrest;
+use dotenv::dotenv;
+use serde_json;
 
-type Db = Arc<RwLock<HashMap<String, Board>>>;
+struct AppState {
+  supabase_client: Postgrest,
+}
+
+impl Clone for AppState {
+  fn clone(&self) -> Self {
+      let supabase_url: String = dotenv::var("SUPABASE_URL")
+      .expect("Need to set environment variable SUPABASE_URL") + "/rest/v1/";
+      let client: Postgrest = Postgrest::new(supabase_url)
+          .insert_header("apikey", dotenv::var("SUPABASE_API_KEY").unwrap());
+      Self {
+          supabase_client: client,
+      }
+  }
+}
+
+impl AppState {
+  fn create() -> Arc<AppState> {     
+      let supabase_url: String = dotenv::var("SUPABASE_URL")
+          .expect("Need to set environment variable SUPABASE_URL") + "/rest/v1/";
+      let client: Postgrest = Postgrest::new(supabase_url)
+          .insert_header("apikey", dotenv::var("SUPABASE_API_KEY").unwrap());                      //2
+      Arc::new(AppState { supabase_client: client })
+  }
+}
 
 #[tokio::main]
 async fn main() {
-    let shared_state = Db::default();
+    dotenv().ok();
+    let app_state = AppState::create();
 
     let app = Router::new()
       .route("/", get(ping))
@@ -26,7 +60,7 @@ async fn main() {
           .allow_headers(Any)
           .allow_methods(Any),
       )
-      .with_state(Arc::clone(&shared_state));
+      .with_state(Arc::clone(&app_state));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
@@ -41,49 +75,81 @@ async fn ping() -> &'static str {
 }
 
 async fn save_user_progress(
-  State(db): State<Db>,
-  Json(input): Json<ProgressReqeust>
+    State(app_state): State<Arc<AppState>>,
+    Json(input): Json<ProgressReqeust>
 ) -> impl IntoResponse {
-    let board: Board = input.board;    
-    match db.write() {
-        Ok(mut db_instance) => {
-            db_instance.insert("test".to_string(), board);
-            (StatusCode::CREATED, Json(ProgressResponse{
-              success: true,
-              board: Some(board)
-            }))
-        },
-        Err(err) => {
-            println!("Error: {}", err);
-            (StatusCode::INTERNAL_SERVER_ERROR, Json(ProgressResponse{
-              success: false,
-              board: None
-            }))
+    match input.uuid {
+      Some(uuid) => {
+        let client = &app_state.supabase_client;
+        let board_str = serde_json::to_string(&input.board).unwrap();
+        let s = format!("[{{ \"uuid\": \"{}\", \"progress\": {} }}]",
+          uuid, 
+          board_str);
+        match client
+            .from("user_progress")
+            .upsert(s)
+            .on_conflict("uuid")
+            .execute()
+            .await {
+            Ok(_) => {
+              (StatusCode::OK, Json(SaveProgressResponse {
+                success: true,
+              }))
+            },
+            Err(_) => {
+              get_default_save_response()
+            },
         }
+      }
+      None => {
+        get_default_save_response()
+      },
     }
 }
 
-async fn get_user_progress(State(db): State<Db>) -> impl IntoResponse {
-    match db.read() {
-      Ok(db_instance) => {
-        let board: Option<Board> = db_instance.get("test").cloned();
-        match board {
-          Some(b) => (StatusCode::OK, Json(ProgressResponse {
-              success: true,
-              board: Some(b)
-          })),
-          None => (StatusCode::NOT_FOUND, Json(ProgressResponse{ 
-              success: false,
-              board: None 
-          }))
+fn get_default_save_response() -> (StatusCode, Json<SaveProgressResponse>) {
+    (StatusCode::OK, Json(SaveProgressResponse {
+        success: false,
+    }))
+}
+
+async fn get_user_progress(
+  Query(q): Query<UuidQuery>,
+  State(app_state): State<Arc<AppState>>,
+) -> impl IntoResponse {
+  match q.uuid {
+      Some(uuid) => {
+          let client = &app_state.supabase_client;
+          match client
+              .from("user_progress")
+              .select("*")
+              .eq("uuid", uuid)
+              .execute()
+              .await {
+              Ok(res) => match res.text().await {
+                  Ok(resp) => {
+
+                    let board_data: DbBoard = serde_json::from_str(&resp).unwrap();
+                    if board_data.len() == 0 {
+                      return get_default_progress();
+                    }
+                    (StatusCode::OK, Json(GetProgressResponse {
+                        success: true,
+                        board: Some(board_data[0].progress),
+                    }))
+                  },
+                  Err(_) => get_default_progress(),
+              },
+              Err(_) => get_default_progress(),
+          }
       }
-      },
-      Err(err) => {
-        println!("Error: {}", err);
-        (StatusCode::INTERNAL_SERVER_ERROR, Json(ProgressResponse{
-          success: false,
-          board: None
-        }))
-      }
-    }   
+      None => get_default_progress(),
+  }
+}
+
+fn get_default_progress() -> (StatusCode, Json<GetProgressResponse>) {
+  (StatusCode::OK, Json(GetProgressResponse {
+      success: true,
+      board: Some(get_initial_board_data()),
+  }))
 }

@@ -5,9 +5,10 @@ use dioxus::html::KeyboardEvent;
 use shared::types::{Board, GameStatus, ProgressReqeust};
 use reqwest;
 use shared::logic::{get_initial_board_data, add_random, move_up, move_down, move_left, move_right, check_and_do_next};
-use log;
+use uuid::Uuid;
 use crate::components::row::Row;
 use shared::translate::TRANSLATION;
+use gloo_storage::{LocalStorage, Storage, errors::StorageError};
 
 pub fn Game(cx: Scope) -> Element {
     let game_status = use_state(cx, || GameStatus::Playing);
@@ -15,40 +16,65 @@ pub fn Game(cx: Scope) -> Element {
     let is_first_load = use_state(cx, || true);
     let translator = use_read(cx, TRANSLATION);
 
+    use_effect(cx, (is_first_load), |_| async move {
+        let a: Result<String, StorageError> = LocalStorage::get("uuid");
+        match a {
+            Ok(uuid) => {
+                log::info!("Found uuid: {}", uuid);
+            },
+            StorageError => {
+                log::info!("No uuid found, creating one...");
+                let uuid = Uuid::new_v4();
+                LocalStorage::set("uuid", uuid.to_string()).unwrap();
+            }
+        };
+    });
+
     use_effect(cx, (is_first_load, board_data, game_status), |(is_first_load, board_data, game_status)| async move {
         if !is_first_load.get() {
             return;
         }
-            
-        let client = reqwest::Client::new();
-        let res = client.get("http://localhost:3000/progress").send().await;
-        match res {
-            Ok(response) => {
-                let payload = response.json::<ProgressReqeust>().await;
-                match payload {
-                    Ok(data) => {
-                        is_first_load.set(false);
-                        board_data.set(data.board);
 
-                        match check_and_do_next(&data.board) {
-                            GameStatus::Win => {
-                                game_status.set(GameStatus::Win);
+        let a: Result<String, StorageError> = LocalStorage::get("uuid");
+        match a {
+            Ok(uuid) => {
+                let client = reqwest::Client::new();
+                let url = format!("http://localhost:3000/progress?uuid={uuid}", uuid=uuid);
+                let res = client.get(url).send().await;
+                match res {
+                    Ok(response) => {
+                        let payload = response.json::<ProgressReqeust>().await;
+                        match payload {
+                            Ok(data) => {
+                                is_first_load.set(false);
+                                board_data.set(data.board);
+
+                                match check_and_do_next(&data.board) {
+                                    GameStatus::Win => {
+                                        game_status.set(GameStatus::Win);
+                                    },
+                                    GameStatus::Fail => {
+                                        game_status.set(GameStatus::Fail);
+                                    },
+                                    GameStatus::Playing => { game_status.set(GameStatus::Playing); },
+                                }
                             },
-                            GameStatus::Fail => {
-                                game_status.set(GameStatus::Fail);
-                            },
-                            GameStatus::Playing => { game_status.set(GameStatus::Playing); },
+                            Err(err) => {
+                                log::error!("Failed to parse JSON: {}", err);
+                            }
                         }
                     },
                     Err(err) => {
-                        log::error!("Failed to parse JSON: {}", err);
+                        log::error!("Failed to send request: {}", err);
                     }
                 }
             },
-            Err(err) => {
-                log::error!("Failed to send request: {}", err);
+            StorageError => {
+                log::info!("No uuid found, creating one...");
+                let uuid = Uuid::new_v4();
+                LocalStorage::set("uuid", uuid.to_string()).unwrap();
             }
-        }
+        };
     });
 
     let handle_key_down_event = move |evt: KeyboardEvent| -> () {
@@ -82,18 +108,27 @@ pub fn Game(cx: Scope) -> Element {
         
         cx.spawn({
             async move {
-                let client = reqwest::Client::new();
-                let res = client.post("http://localhost:3000/progress")
-                    .json(&ProgressReqeust {
-                        board: new_data
-                    })
-                    .send()
-                    .await;
-                
-                match res {
-                    Ok(_) => {},
-                    Err(err) => {
-                        log::error!("Failed to record progress: {}", err);
+                let a: Result<String, StorageError> = LocalStorage::get("uuid");
+                match a {
+                    Ok(uuid) => {
+                        let client = reqwest::Client::new();
+                        let res = client.post("http://localhost:3000/progress")
+                            .json(&ProgressReqeust {
+                                board: new_data,
+                                uuid: Some(uuid),
+                            })
+                            .send()
+                            .await;
+                        
+                        match res {
+                            Ok(_) => {},
+                            Err(err) => {
+                                log::error!("Failed to record progress: {}", err);
+                            }
+                        }
+                    },
+                    StorageError => {
+                        log::info!("No uuid found, skip...");
                     }
                 }
             }

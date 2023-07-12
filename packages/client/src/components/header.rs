@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use dioxus::html::MouseEvent;
 use fermi::*;
 use dioxus_html_macro::html;
-use shared::translate::{TRANSLATION};
+use shared::translate::TRANSLATION;
 
 #[cfg(not(target_arch = "wasm32"))]
 use dioxus_desktop::use_eval;
@@ -71,9 +71,7 @@ pub fn LanguageButton<'a> (cx: Scope<'a, LanguageButtonProps<'a>>) -> Element<'a
     cx.render(rsx!(
         li {
             onclick: move |evt| cx.props.onclick.call(evt),
-            a {
-                cx.props.language.clone()
-            }   
+            a { cx.props.language.clone() }
         }
     ))
 }

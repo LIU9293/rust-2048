@@ -1,6 +1,6 @@
 use fermi::*;
 use dioxus::prelude::*;
-use dioxus_router::{Link};
+use dioxus_router::Link;
 use dioxus_html_macro::html;
 use shared::translate::TRANSLATION;
 

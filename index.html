@@ -33,6 +33,7 @@
         }
 
         if (counter === 1) {
+          e.preventDefault();
           counter = 0
           new_e = new e.constructor(e.type, e);
           gamearea.dispatchEvent(new_e);
