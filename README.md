@@ -3,6 +3,7 @@
 It's a demo application for me to figure out if I can use rust/dioxus in production code, this codebase contains a frontend client that can compiled to Web(wasm) and Desktop, a simple rust server to handle some basic API logic and some shared components between client and server.
 
 Live Demo -> https://rust-2048.vercel.app/
+
 API -> https://rust-2048-api.onrender.com/leaderboard
 
 ### Features in this application
